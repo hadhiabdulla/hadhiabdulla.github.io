@@ -6,7 +6,8 @@ const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const projects = {
  attackgraph: {title:'AttackGraph', category:'01 / SECURITY MODELLING', summary:'Trace attack paths. Compare the fixes.', points:['Generates synthetic enterprise networks and models privilege transitions.','Finds cheapest paths, counts bounded simple paths and compares control sets.','Includes an interactive report and tests for model behaviour.'], limits:'A model, not a scanner. It does not probe real systems. Costs are illustrative; an optimal fix set is optimal only inside this model.', source:'https://github.com/hadhiabdulla/attackgraph'},
  advids: {title:'AdvIDS', category:'02 / ADVERSARIAL ML', summary:'Test the detector, not just its clean accuracy.', points:['Compares Random Forest and neural-network intrusion detectors on NSL-KDD.','Uses a constrained feature-space evasion search and adversarial training.','Documents train, validation and holdout splits, multiple seeds and exploratory benchmarks.'], limits:'Edits dataset features, not packets. It does not demonstrate a working network attack or robustness to other attack families. Distribution shift and post-hoc tests are disclosed in the repository.', source:'https://github.com/hadhiabdulla/advids-adversarial-resilience-lab'},
- fim: {title:'Unix file-integrity monitor', category:'03 / SYSTEMS SECURITY', summary:'Baseline. Watch. Notice the change.', points:['SHA-256 file hashing and recursive directory traversal in C.','Init, check and monitor modes, plus a background daemon.','Alerts for modified, new and deleted files; exit codes for shell integration.'], limits:'A local file-change tool, not a full endpoint detection platform. A change alert does not establish that a change is malicious.', source:'https://github.com/hadhiabdulla/unix-file-integrity-monitor'}
+ fim: {title:'Unix file-integrity monitor', category:'03 / SYSTEMS SECURITY', summary:'Baseline. Watch. Notice the change.', points:['SHA-256 file hashing and recursive directory traversal in C.','Init, check and monitor modes, plus a background daemon.','Alerts for modified, new and deleted files; exit codes for shell integration.'], limits:'A local file-change tool, not a full endpoint detection platform. A change alert does not establish that a change is malicious.', source:'https://github.com/hadhiabdulla/unix-file-integrity-monitor'},
+ mule:{title:'Mule Hunter',category:'04 / GRAPH ANALYSIS',summary:'Follow the flow. Inspect the signal.',points:['Graph analysis and explainable risk scoring on blockchain transaction data.','CSV upload and live Bitcoin modes.','Dataset experiments documented in the repository.'],limits:'Scores are leads for human review, not proof of wrongdoing. The data is blockchain data, not labelled bank mule accounts; live scores have no ground truth.',source:'https://github.com/hadhiabdulla/mule-hunter'}
 };
 // All substantive project claims are grounded in the public repositories.
 const projectDialog = $('#project-dialog');
@@ -69,3 +70,10 @@ function placeFigureHotspots(){
 }
 if($('.orbital'))new ResizeObserver(placeFigureHotspots).observe($('.orbital'));
 placeFigureHotspots();
+
+// Progressive enhancement: content is visible without JavaScript or motion.
+if('IntersectionObserver' in window && !motionPreference.matches){
+ const revealTargets=$$('.section-head,.skills-grid>div,.project,.lab-grid,.about-section>div');
+ const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('is-revealed');observer.unobserve(entry.target);}}),{threshold:.02,rootMargin:'0px 0px 70px 0px'});
+ revealTargets.forEach((el,index)=>{if(el.getBoundingClientRect().top>innerHeight*.7){el.classList.add('reveal-ready');el.style.setProperty('--reveal-delay',(index%2)*70+'ms');observer.observe(el);}});
+  }
